@@ -32,7 +32,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                echo "✅ Code checked out — branch: ${env.GIT_BRANCH}"
+                echo "Code checked out — branch: ${env.GIT_BRANCH}"
             }
         }
 
@@ -40,7 +40,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "🐳 Building image: ${ECR_IMAGE}"
+                    echo "Building image: ${ECR_IMAGE}"
                     sh """
                         docker build \
                             --build-arg BUILD_NUMBER=${env.BUILD_NUMBER} \
@@ -63,7 +63,7 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
                     script {
-                        echo "🔐 Authenticating with ECR..."
+                        echo "Authenticating with ECR..."
                         sh """
                             aws ecr get-login-password \
                                 --region ${AWS_REGION} | \
@@ -72,7 +72,7 @@ pipeline {
                                 --password-stdin ${ECR_REGISTRY}
                         """
 
-                        echo "📤 Pushing ${ECR_IMAGE}..."
+                        echo "Pushing ${ECR_IMAGE}..."
                         sh """
                             docker push ${ECR_IMAGE}
                             docker push ${ECR_REGISTRY}/${ECR_REPO_NAME}:latest
@@ -146,7 +146,7 @@ pipeline {
                                 # ── Clean up dangling images ──────────────────
                                 docker image prune -f
 
-                                echo "✅ Deployment complete!"
+                                echo " Deployment complete!"
 
 REMOTE
                         """
@@ -181,14 +181,14 @@ REMOTE
         success {
             echo """
             ╔══════════════════════════════════════════╗
-            ║  ✅  Deployment Successful               ║
+            ║   Deployment Successful               ║
             ║  Build   : #${env.BUILD_NUMBER}          ║
             ║  Image   : ${ECR_IMAGE}                  ║
             ╚══════════════════════════════════════════╝
             """
         }
         failure {
-            echo "❌ Pipeline failed — check logs above for details."
+            echo " Pipeline failed — check logs above for details."
             // Optional: add Slack/email notification here
         }
         always {
