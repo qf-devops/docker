@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    build: .
+    image: "devopsjuly22017/web"
     ports:
      - "80:5000"
   redis:
